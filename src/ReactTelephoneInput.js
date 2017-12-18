@@ -196,6 +196,11 @@ export var ReactTelephoneInput = createReactClass({
     },
     componentWillReceiveProps(nextProps) {
         this.setState(this._mapPropsToState(nextProps))
+         if(this.props.defaultCountry !== nextProps.defaultCountry){
+           let countries = allCountries.filter((element) => element.iso2 === nextProps.defaultCountry.toLowerCase())
+           if(countries.length > 0)
+             this.handleFlagItemClick(countries[0])
+         }
     },
     componentWillUnmount() {
         document.removeEventListener('keydown', this.handleKeydown)
@@ -520,6 +525,8 @@ export var ReactTelephoneInput = createReactClass({
             selectedCountryGuess ? selectedCountryGuess.format : null,
             this.props.autoFormat
         )
+        if (this.props.onChange)
+            this.props.onChange(formattedNumber, selectedCountryGuess)
 
         return {
             selectedCountry: selectedCountryGuess,
